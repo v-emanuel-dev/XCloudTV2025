@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Nome do aplicativo -->
+    <string name="app_name">Xcloud TV 2025</string>
+
+    <!-- Títulos principais -->
+    <string name="main_title">Xcloud TV</string>
+    <string name="settings">Configurações</string>
+    <string name="channels">Canais</string>
+    <string name="categories">Categorias</string>
+
+    <!-- Categorias -->
+    <string name="category_all">Todos</string>
+    <string name="category_favorites">Favoritos</string>
+    <string name="category_recent">Recentes</string>
+    <string name="category_sports">Esportes</string>
+    <string name="category_news">Notícias</string>
+    <string name="category_movies">Filmes</string>
+    <string name="category_series">Séries</string>
+    <string name="category_music">Música</string>
+    <string name="category_kids">Infantil</string>
+    <string name="category_documentaries">Documentários</string>
+    <string name="category_entertainment">Entretenimento</string>
+    <string name="category_religious">Religioso</string>
+
+    <!-- Configurações de Playlist -->
+    <string name="playlist_settings">Configurações da Playlist</string>
+    <string name="playlist_url">URL da Playlist</string>
+    <string name="playlist_url_hint">https://exemplo.com/playlist.m3u8</string>
+    <string name="playlist_url_description">Cole a URL da sua playlist M3U/M3U8</string>
+
+    <!-- Autenticação -->
+    <string name="authentication">Autenticação</string>
+    <string name="authentication_description">Habilite se sua playlist requer usuário e senha</string>
+    <string name="username">Usuário</string>
+    <string name="password">Senha</string>
+    <string name="show_password">Mostrar senha</string>
+    <string name="hide_password">Ocultar senha</string>
+
+    <!-- Ações -->
+    <string name="save">Salvar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="close">Fechar</string>
+    <string name="test">Testar</string>
+    <string name="test_connection">Testar Conexão</string>
+    <string name="validate">Validar</string>
+    <string name="clear">Limpar</string>
+    <string name="retry">Tentar Novamente</string>
+    <string name="refresh">Atualizar</string>
+
+    <!-- Player -->
+    <string name="play">Reproduzir</string>
+    <string name="pause">Pausar</string>
+    <string name="stop">Parar</string>
+    <string name="next_channel">Próximo Canal</string>
+    <string name="previous_channel">Canal Anterior</string>
+    <string name="volume">Volume</string>
+    <string name="mute">Mudo</string>
+    <string name="unmute">Som</string>
+    <string name="loading">Carregando...</string>
+    <string name="buffering">Buffer...</string>
+
+    <!-- Estados -->
+    <string name="live">AO VIVO</string>
+    <string name="offline">Offline</string>
+    <string name="favorite">Favorito</string>
+    <string name="add_to_favorites">Adicionar aos favoritos</string>
+    <string name="remove_from_favorites">Remover dos favoritos</string>
+    <string name="recently_watched">Assistido recentemente</string>
+    <string name="now_playing">Reproduzindo</string>
+
+    <!-- Mensagens de sucesso -->
+    <string name="playlist_updated">Playlist atualizada com sucesso</string>
+    <string name="settings_saved">Configurações salvas</string>
+    <string name="channel_added_to_favorites">Canal adicionado aos favoritos</string>
+    <string name="channel_removed_from_favorites">Canal removido dos favoritos</string>
+
+    <!-- Mensagens de erro -->
+    <string name="error">Erro</string>
+    <string name="error_network">Erro de conexão de rede</string>
+    <string name="error_playlist_invalid">Playlist inválida</string>
+    <string name="error_playlist_not_found">Playlist não encontrada</string>
+    <string name="error_channel_unavailable">Canal indisponível</string>
+    <string name="error_authentication_failed">Falha na autenticação</string>
+    <string name="error_timeout">Timeout na conexão</string>
+    <string name="error_unknown">Erro desconhecido</string>
+    <string name="error_playback">Erro na reprodução</string>
+    <string name="error_loading_channel">Erro ao carregar canal</string>
+
+    <!-- Mensagens informativas -->
+    <string name="no_channels_found">Nenhum canal encontrado</string>
+    <string name="no_favorites">Nenhum favorito</string>
+    <string name="no_recent_channels">Nenhum canal recente</string>
+    <string name="no_internet_connection">Sem conexão com a internet</string>
+    <string name="welcome_message">Bem-vindo ao Xcloud TV</string>
+    <string name="select_channel_message">Selecione um canal para começar a assistir</string>
+    <string name="configure_playlist_message">Configure uma playlist M3U para começar</string>
+
+    <!-- Configurações avançadas -->
+    <string name="advanced_settings">Configurações Avançadas</string>
+    <string name="buffer_duration">Duração do Buffer</string>
+    <string name="buffer_duration_description">Tempo de buffer em segundos</string>
+    <string name="connection_timeout">Timeout de Conexão</string>
+    <string name="connection_timeout_description">Tempo limite para conectar</string>
+    <string name="user_agent">User Agent</string>
+    <string name="user_agent_description">Identificação do cliente</string>
+    <string name="video_quality">Qualidade do Vídeo</string>
+    <string name="video_quality_auto">Automático</string>
+    <string name="video_quality_low">Baixa (480p)</string>
+    <string name="video_quality_medium">Média (720p)</string>
+    <string name="video_quality_high">Alta (1080p)</string>
+    <string name="video_quality_ultra">Ultra (4K)</string>
+
+    <!-- Informações de ajuda -->
+    <string name="help">Ajuda</string>
+    <string name="tips">Dicas:</string>
+    <string name="tip_formats">• Suporte a formatos M3U e M3U8</string>
+    <string name="tip_urls">• URLs devem começar com http:// ou https://</string>
+    <string name="tip_test">• Teste a conexão antes de salvar</string>
+    <string name="tip_default_channels">• Canais padrão serão mantidos</string>
+    <string name="tip_authentication">• Use autenticação apenas se necessário</string>
+    <string name="help_documentation">Para mais informações, consulte a documentação do seu provedor IPTV.</string>
+
+    <!-- Exemplos -->
+    <string name="example_urls">Exemplos de URLs:</string>
+    <string name="example_standard">Playlist IPTV padrão</string>
+    <string name="example_xtream">Xtream Codes API</string>
+    <string name="example_github">Playlist pública GitHub</string>
+
+    <!-- Estatísticas -->
+    <string name="total_channels">Total de canais</string>
+    <string name="channels_count">%1$d canais</string>
+    <string name="categories_count">%1$d categorias</string>
+    <string name="playlist_stats">%1$d canais em %2$d categorias</string>
+
+    <!-- Notificações -->
+    <string name="notification_channel_name">Reprodução</string>
+    <string name="notification_channel_description">Notificações de reprodução de mídia</string>
+    <string name="notification_playing">Reproduzindo</string>
+    <string name="notification_paused">Pausado</string>
+
+    <!-- Controles remotos -->
+    <string name="remote_play_pause">Play/Pause</string>
+    <string name="remote_stop">Parar</string>
+    <string name="remote_next">Próximo</string>
+    <string name="remote_previous">Anterior</string>
+    <string name="remote_volume_up">Volume +</string>
+    <string name="remote_volume_down">Volume -</string>
+    <string name="remote_channel_up">Canal +</string>
+    <string name="remote_channel_down">Canal -</string>
+    <string name="remote_menu">Menu</string>
+    <string name="remote_back">Voltar</string>
+    <string name="remote_select">Selecionar</string>
+
+    <!-- Acessibilidade -->
+    <string name="content_description_logo">Logo do canal</string>
+    <string name="content_description_favorite">Favorito</string>
+    <string name="content_description_live">Ao vivo</string>
+    <string name="content_description_settings">Configurações</string>
+    <string name="content_description_close">Fechar</string>
+    <string name="content_description_play">Reproduzir</string>
+    <string name="content_description_pause">Pausar</string>
+    <string name="content_description_volume">Volume</string>
+    <string name="content_description_progress">Progresso</string>
+</resources>

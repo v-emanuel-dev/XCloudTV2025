@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <!-- Incluir banco de dados de canais -->
+    <include domain="database" path="xcloud_tv_database"/>
+
+    <!-- Incluir configurações gerais -->
+    <include domain="sharedpref" path="xcloud_settings"/>
+
+    <!-- Excluir credenciais sensíveis -->
+    <exclude domain="sharedpref" path="xcloud_settings.xml"/>
+</full-backup-content>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="open_favorites"
+        android:enabled="true"
+        android:icon="@android:drawable/btn_star_big_on"
+        android:shortcutShortLabel="@string/category_favorites"
+        android:shortcutLongLabel="@string/category_favorites">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.ivip.xcloudtv2025"
+            android:targetClass="com.ivip.xcloudtv2025.presentation.screens.main.MainActivity">
+            <extra android:name="category" android:value="favorites" />
+        </intent>
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="open_settings"
+        android:enabled="true"
+        android:icon="@android:drawable/ic_menu_preferences"
+        android:shortcutShortLabel="@string/settings"
+        android:shortcutLongLabel="@string/settings">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.ivip.xcloudtv2025"
+            android:targetClass="com.ivip.xcloudtv2025.presentation.screens.main.MainActivity">
+            <extra android:name="action" android:value="settings" />
+        </intent>
+    </shortcut>
+</shortcuts>
