@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
-    <domain-config cleartextTrafficPermitted="true">
-        <!-- Permitir tráfego HTTP para servidores IPTV que não suportam HTTPS -->
-        <domain includeSubdomains="true">localhost</domain>
-        <domain includeSubdomains="true">127.0.0.1</domain>
-        <domain includeSubdomains="true">192.168.0.0</domain>
-        <domain includeSubdomains="true">10.0.0.0</domain>
-    </domain-config>
-
+    <!-- Negar HTTP por padrão -->
     <base-config cleartextTrafficPermitted="false">
         <trust-anchors>
             <certificates src="system"/>
         </trust-anchors>
     </base-config>
+
+    <!-- Se for realmente necessário, liberar HTTP para domínios específicos -->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">stream.seudominio.com</domain>
+        <domain includeSubdomains="true">cdn.seudominio.com</domain>
+    </domain-config>
 </network-security-config>

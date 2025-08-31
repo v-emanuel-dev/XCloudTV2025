@@ -153,7 +153,7 @@ private fun ChannelList(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Canais",
+                text = "XCloud TV",
                 style = MaterialTheme.typography.headlineMedium,
                 color = MaterialTheme.colorScheme.onBackground
             )
