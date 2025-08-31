@@ -25,10 +25,6 @@ import androidx.compose.ui.window.DialogProperties
 import com.ivip.xcloudtv2025.presentation.screens.main.MainViewModel
 import com.ivip.xcloudtv2025.presentation.theme.XcloudTextStyles
 
-/**
- * Dialog de configurações para playlist IPTV
- * Interface otimizada para Android TV com navegação D-pad
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsDialog(
@@ -42,6 +38,11 @@ fun SettingsDialog(
     var useAuthentication by remember { mutableStateOf(currentSettings.useAuth) }
     var showPassword by remember { mutableStateOf(false) }
 
+    // Estados para modo Xtream Codes
+    var useXtreamMode by remember { mutableStateOf(currentSettings.useXtreamMode) }
+    var serverHost by remember { mutableStateOf(currentSettings.serverHost) }
+    var serverPort by remember { mutableStateOf(currentSettings.serverPort) }
+
     // Estados de validação e feedback
     var isValidating by remember { mutableStateOf(false) }
     var validationResult by remember { mutableStateOf<ValidationResult?>(null) }
@@ -49,6 +50,17 @@ fun SettingsDialog(
 
     val focusManager = LocalFocusManager.current
     val scrollState = rememberScrollState()
+
+    // Função para construir URL do Xtream Codes
+    fun buildXtreamUrl(): String {
+        if (!useXtreamMode || serverHost.isBlank() || username.isBlank() || password.isBlank()) {
+            return ""
+        }
+        val protocol = if (serverHost.startsWith("https://") || serverHost.startsWith("http://")) "" else "http://"
+        val host = serverHost.removePrefix("https://").removePrefix("http://")
+        val port = if (serverPort.isNotBlank()) ":$serverPort" else ""
+        return "${protocol}${host}${port}/get.php?username=${username}&password=${password}&type=m3u_plus"
+    }
 
     Dialog(
         onDismissRequest = onDismiss,
@@ -61,7 +73,7 @@ fun SettingsDialog(
         Card(
             modifier = Modifier
                 .fillMaxWidth(0.9f)
-                .fillMaxHeight(0.8f),
+                .fillMaxHeight(0.9f),
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.surface
             ),
@@ -80,36 +92,87 @@ fun SettingsDialog(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Configurações da Playlist
-                PlaylistSection(
-                    playlistUrl = playlistUrl,
-                    onPlaylistUrlChange = {
-                        playlistUrl = it
+                // Modo de Configuração (Toggle)
+                ConfigurationModeSection(
+                    useXtreamMode = useXtreamMode,
+                    onModeChange = {
+                        useXtreamMode = it
                         validationResult = null
-                    },
-                    onValidateUrl = {
-                        if (playlistUrl.isNotBlank()) {
-                            isValidating = true
-                            // Simular validação
+                        if (it) {
+                            // Limpar URL quando mudar para modo Xtream
+                            playlistUrl = ""
                         }
-                    },
-                    isValidating = isValidating,
-                    validationResult = validationResult
+                    }
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Seção de Autenticação
-                AuthenticationSection(
-                    useAuthentication = useAuthentication,
-                    username = username,
-                    password = password,
-                    showPassword = showPassword,
-                    onUseAuthChange = { useAuthentication = it },
-                    onUsernameChange = { username = it },
-                    onPasswordChange = { password = it },
-                    onTogglePasswordVisibility = { showPassword = !showPassword }
-                )
+                if (useXtreamMode) {
+                    // Seção Xtream Codes
+                    XtreamCodesSection(
+                        serverHost = serverHost,
+                        serverPort = serverPort,
+                        username = username,
+                        password = password,
+                        showPassword = showPassword,
+                        onHostChange = {
+                            serverHost = it
+                            validationResult = null
+                        },
+                        onPortChange = {
+                            serverPort = it
+                            validationResult = null
+                        },
+                        onUsernameChange = {
+                            username = it
+                            validationResult = null
+                        },
+                        onPasswordChange = {
+                            password = it
+                            validationResult = null
+                        },
+                        onTogglePasswordVisibility = { showPassword = !showPassword },
+                        builtUrl = buildXtreamUrl(),
+                        isValidating = isValidating,
+                        validationResult = validationResult,
+                        onValidate = {
+                            val url = buildXtreamUrl()
+                            if (url.isNotBlank()) {
+                                isValidating = true
+                            }
+                        }
+                    )
+                } else {
+                    // Configurações da Playlist (modo original)
+                    PlaylistSection(
+                        playlistUrl = playlistUrl,
+                        onPlaylistUrlChange = {
+                            playlistUrl = it
+                            validationResult = null
+                        },
+                        onValidateUrl = {
+                            if (playlistUrl.isNotBlank()) {
+                                isValidating = true
+                            }
+                        },
+                        isValidating = isValidating,
+                        validationResult = validationResult
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // Seção de Autenticação (apenas para modo URL manual)
+                    AuthenticationSection(
+                        useAuthentication = useAuthentication,
+                        username = username,
+                        password = password,
+                        showPassword = showPassword,
+                        onUseAuthChange = { useAuthentication = it },
+                        onUsernameChange = { username = it },
+                        onPasswordChange = { password = it },
+                        onTogglePasswordVisibility = { showPassword = !showPassword }
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -123,11 +186,12 @@ fun SettingsDialog(
 
                 // Botões de ação
                 ActionButtons(
-                    canSave = playlistUrl.isNotBlank(),
+                    canSave = if (useXtreamMode) buildXtreamUrl().isNotBlank() else playlistUrl.isNotBlank(),
                     onSave = {
-                        val finalUsername = if (useAuthentication) username else ""
-                        val finalPassword = if (useAuthentication) password else ""
-                        onUpdatePlaylist(playlistUrl, finalUsername, finalPassword)
+                        val finalUrl = if (useXtreamMode) buildXtreamUrl() else playlistUrl
+                        val finalUsername = if (useXtreamMode || useAuthentication) username else ""
+                        val finalPassword = if (useXtreamMode || useAuthentication) password else ""
+                        onUpdatePlaylist(finalUrl, finalUsername, finalPassword)
                     },
                     onCancel = onDismiss,
                     onTestConnection = {
@@ -144,9 +208,7 @@ fun SettingsDialog(
 }
 
 @Composable
-private fun SettingsHeader(
-    onDismiss: () -> Unit
-) {
+private fun SettingsHeader(onDismiss: () -> Unit) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -164,6 +226,323 @@ private fun SettingsHeader(
                 contentDescription = "Fechar",
                 tint = MaterialTheme.colorScheme.onSurface
             )
+        }
+    }
+}
+
+@Composable
+private fun ConfigurationModeSection(
+    useXtreamMode: Boolean,
+    onModeChange: (Boolean) -> Unit
+) {
+    Column {
+        Text(
+            text = "Modo de Configuração",
+            style = XcloudTextStyles.SettingsTitle,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+
+        Text(
+            text = "Escolha como deseja configurar sua playlist",
+            style = XcloudTextStyles.SettingsSubtitle,
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
+
+        // Toggle entre modos
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            FilterChip(
+                selected = !useXtreamMode,
+                onClick = { onModeChange(false) },
+                label = { Text("URL Manual") },
+                leadingIcon = {
+                    Icon(
+                        Icons.Default.Link,
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp)
+                    )
+                },
+                modifier = Modifier.weight(1f)
+            )
+
+            FilterChip(
+                selected = useXtreamMode,
+                onClick = { onModeChange(true) },
+                label = { Text("Servidor IPTV") },
+                leadingIcon = {
+                    Icon(
+                        Icons.Default.Storage,
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp)
+                    )
+                },
+                modifier = Modifier.weight(1f)
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun XtreamCodesSection(
+    serverHost: String,
+    serverPort: String,
+    username: String,
+    password: String,
+    showPassword: Boolean,
+    onHostChange: (String) -> Unit,
+    onPortChange: (String) -> Unit,
+    onUsernameChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
+    onTogglePasswordVisibility: () -> Unit,
+    builtUrl: String,
+    isValidating: Boolean,
+    validationResult: ValidationResult?,
+    onValidate: () -> Unit
+) {
+    val focusManager = LocalFocusManager.current
+
+    Column {
+        Text(
+            text = "Configuração do Servidor IPTV",
+            style = XcloudTextStyles.SettingsTitle,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+
+        Text(
+            text = "Configure usando host, usuário e senha do seu provedor",
+            style = XcloudTextStyles.SettingsSubtitle,
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
+
+        // Host/IP do Servidor
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            OutlinedTextField(
+                value = serverHost,
+                onValueChange = onHostChange,
+                label = { Text("Host/IP do Servidor") },
+                placeholder = { Text("exemplo.com ou 192.168.1.100") },
+                modifier = Modifier.weight(3f),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Uri,
+                    imeAction = ImeAction.Next
+                ),
+                keyboardActions = KeyboardActions(
+                    onNext = { focusManager.moveFocus(FocusDirection.Right) }
+                ),
+                leadingIcon = {
+                    Icon(Icons.Default.Storage, contentDescription = null)
+                }
+            )
+
+            OutlinedTextField(
+                value = serverPort,
+                onValueChange = onPortChange,
+                label = { Text("Porta") },
+                placeholder = { Text("8080") },
+                modifier = Modifier.weight(1f),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Next
+                ),
+                keyboardActions = KeyboardActions(
+                    onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                )
+            )
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Usuário
+        OutlinedTextField(
+            value = username,
+            onValueChange = onUsernameChange,
+            label = { Text("Usuário") },
+            placeholder = { Text("Seu nome de usuário") },
+            modifier = Modifier.fillMaxWidth(),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Next
+            ),
+            keyboardActions = KeyboardActions(
+                onNext = { focusManager.moveFocus(FocusDirection.Down) }
+            ),
+            leadingIcon = {
+                Icon(Icons.Default.Person, contentDescription = null)
+            }
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Senha
+        OutlinedTextField(
+            value = password,
+            onValueChange = onPasswordChange,
+            label = { Text("Senha") },
+            placeholder = { Text("Sua senha") },
+            modifier = Modifier.fillMaxWidth(),
+            visualTransformation = if (showPassword) VisualTransformation.None
+            else PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = { focusManager.clearFocus() }
+            ),
+            leadingIcon = {
+                Icon(Icons.Default.Lock, contentDescription = null)
+            },
+            trailingIcon = {
+                Row {
+                    IconButton(onClick = onTogglePasswordVisibility) {
+                        Icon(
+                            if (showPassword) Icons.Default.VisibilityOff
+                            else Icons.Default.Visibility,
+                            contentDescription = if (showPassword) "Ocultar senha" else "Mostrar senha"
+                        )
+                    }
+
+                    if (builtUrl.isNotBlank()) {
+                        if (isValidating) {
+                            CircularProgressIndicator(
+                                modifier = Modifier
+                                    .size(20.dp)
+                                    .padding(top = 12.dp),
+                                strokeWidth = 2.dp
+                            )
+                        } else {
+                            IconButton(onClick = onValidate) {
+                                Icon(
+                                    Icons.Default.CheckCircle,
+                                    contentDescription = "Validar configuração",
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                            }
+                        }
+                    }
+                }
+            },
+            isError = validationResult?.isError == true,
+            supportingText = {
+                validationResult?.let { result ->
+                    Text(
+                        text = result.message,
+                        color = if (result.isError) MaterialTheme.colorScheme.error
+                        else MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
+        )
+
+        // URL Gerada (preview)
+        if (builtUrl.isNotBlank()) {
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                )
+            ) {
+                Column(
+                    modifier = Modifier.padding(12.dp)
+                ) {
+                    Text(
+                        text = "URL Gerada:",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                    )
+
+                    Text(
+                        text = builtUrl,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
+                }
+            }
+        }
+
+        // Exemplos de configuração
+        if (serverHost.isBlank()) {
+            XtreamExamples(
+                onExampleSelect = { host, port, user, pass ->
+                    onHostChange(host)
+                    onPortChange(port)
+                    onUsernameChange(user)
+                    onPasswordChange(pass)
+                }
+            )
+        }
+    }
+}
+
+@Composable
+private fun XtreamExamples(
+    onExampleSelect: (String, String, String, String) -> Unit
+) {
+    Column(modifier = Modifier.padding(top = 16.dp)) {
+        Text(
+            text = "Exemplos de configuração:",
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+
+        val examples = listOf(
+            XtreamExample("servidor1.exemplo.com", "8080", "usuario", "senha123", "Servidor Padrão"),
+            XtreamExample("192.168.1.100", "25461", "user", "pass", "Servidor Local"),
+            XtreamExample("iptv.provedor.com", "80", "cliente", "12345", "Sem Porta Específica")
+        )
+
+        examples.forEach { example ->
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 4.dp),
+                onClick = {
+                    onExampleSelect(example.host, example.port, example.username, example.password)
+                },
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+                )
+            ) {
+                Row(
+                    modifier = Modifier.padding(12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        Icons.Default.ContentCopy,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(16.dp)
+                    )
+
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                    Column {
+                        Text(
+                            text = example.description,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Text(
+                            text = "${example.host}:${example.port}",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                            modifier = Modifier.padding(top = 2.dp)
+                        )
+                    }
+                }
+            }
         }
     }
 }
@@ -602,11 +981,11 @@ private fun HelpSection() {
                 Spacer(modifier = Modifier.height(4.dp))
 
                 val tips = listOf(
-                    "• Suporte a formatos M3U e M3U8",
-                    "• URLs devem começar com http:// ou https://",
+                    "• Modo Servidor: Use host/usuário/senha do provedor",
+                    "• Modo URL Manual: Cole a URL completa da playlist",
+                    "• Suporte a formatos M3U, M3U8 e Xtream Codes",
                     "• Teste a conexão antes de salvar",
-                    "• Canais padrão serão mantidos",
-                    "• Use autenticação apenas se necessário"
+                    "• Porta padrão é 8080 (deixe vazio se não souber)"
                 )
 
                 tips.forEach { tip ->
@@ -621,7 +1000,7 @@ private fun HelpSection() {
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = "Para mais informações, consulte a documentação do seu provedor IPTV.",
+                    text = "Para configuração por servidor, consulte os dados fornecidos pelo seu provedor IPTV (host, usuário e senha).",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                     textAlign = TextAlign.Start
@@ -630,6 +1009,15 @@ private fun HelpSection() {
         }
     }
 }
+
+// Data class para exemplos Xtream
+private data class XtreamExample(
+    val host: String,
+    val port: String,
+    val username: String,
+    val password: String,
+    val description: String
+)
 
 data class ValidationResult(
     val isValid: Boolean,

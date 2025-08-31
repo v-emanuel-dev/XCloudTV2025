@@ -74,7 +74,10 @@ fun MainScreen(
                             url = "",
                             username = "",
                             password = "",
-                            useAuth = false
+                            useAuth = false,
+                            serverHost = "",
+                            serverPort = "8080",
+                            useXtreamMode = false
                         ),
                         onUpdatePlaylist = { url, username, password ->
                             viewModel.updatePlaylist(url, username, password)

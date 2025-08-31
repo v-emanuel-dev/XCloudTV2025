@@ -340,6 +340,9 @@ class MainViewModel(
         val url: String,
         val username: String,
         val password: String,
-        val useAuth: Boolean
+        val useAuth: Boolean,
+        val serverHost: String = "",
+        val serverPort: String = "8080",
+        val useXtreamMode: Boolean = false
     )
 }
