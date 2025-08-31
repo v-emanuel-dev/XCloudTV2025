@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Article
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -241,7 +242,7 @@ private fun ChannelLogo(
 private fun ChannelFallbackIcon(channel: Channel) {
     val icon = when (channel.category.lowercase()) {
         "esportes", "sports" -> Icons.Default.SportsFootball
-        "notícias", "news" -> Icons.Default.Article
+        "notícias", "news" -> Icons.AutoMirrored.Filled.Article
         "filmes", "movies" -> Icons.Default.Movie
         "música", "music" -> Icons.Default.MusicNote
         "infantil", "kids" -> Icons.Default.ChildCare

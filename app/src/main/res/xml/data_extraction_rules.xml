@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <data-extraction-rules>
     <cloud-backup>
-        <!-- Permitir backup das preferências do usuário -->
-        <include domain="sharedpref" path="xcloud_settings"/>
-
-        <!-- Excluir dados sensíveis do backup -->
+        <!-- Incluir configurações gerais, mas excluir dados sensíveis específicos -->
+        <include domain="sharedpref" path="." />
         <exclude domain="sharedpref" path="xcloud_settings">
             <item key="password"/>
             <item key="username"/>
@@ -13,9 +11,7 @@
 
     <device-transfer>
         <!-- Permitir transferência das configurações básicas -->
-        <include domain="sharedpref" path="xcloud_settings"/>
-
-        <!-- Excluir credenciais da transferência -->
+        <include domain="sharedpref" path="." />
         <exclude domain="sharedpref" path="xcloud_settings">
             <item key="password"/>
             <item key="username"/>
