@@ -233,6 +233,22 @@ class MainViewModel(
     }
 
     /**
+     * Abre tela premium
+     */
+    fun openPremiumAccess() {
+        android.util.Log.d("MainViewModel", "Abrindo tela de acesso premium")
+        _uiState.update { it.copy(showPremiumAccess = true) }
+    }
+
+    /**
+     * Fecha tela premium
+     */
+    fun closePremiumAccess() {
+        android.util.Log.d("MainViewModel", "Fechando tela de acesso premium")
+        _uiState.update { it.copy(showPremiumAccess = false) }
+    }
+
+    /**
      * Limpa mensagens
      */
     fun clearMessage() {
@@ -285,6 +301,7 @@ class MainViewModel(
 
     fun handleBackAction() {
         when {
+            _uiState.value.showPremiumAccess -> closePremiumAccess()
             _uiState.value.showSettings -> closeSettings()
             _currentChannel.value != null -> stopPlayback()
             else -> {
@@ -326,7 +343,8 @@ class MainViewModel(
         val isLoading: Boolean = false,
         val error: String? = null,
         val message: String? = null,
-        val showSettings: Boolean = false
+        val showSettings: Boolean = false,
+        val showPremiumAccess: Boolean = false // Novo estado para controlar tela premium
     )
 
     data class PlayerState(

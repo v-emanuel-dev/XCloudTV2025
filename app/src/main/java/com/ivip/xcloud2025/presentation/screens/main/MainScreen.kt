@@ -14,6 +14,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ivip.xcloudtv2025.domain.model.Channel
 import com.ivip.xcloudtv2025.presentation.components.VideoPlayer
+import com.ivip.xcloudtv2025.presentation.components.SimplePremiumButton
+import com.ivip.xcloudtv2025.presentation.screens.premium.PremiumAccessScreen
 import com.ivip.xcloudtv2025.presentation.screens.settings.SettingsDialog
 import com.ivip.xcloudtv2025.presentation.theme.XcloudTVTheme
 import kotlinx.coroutines.delay
@@ -42,7 +44,8 @@ fun MainScreen(
                         currentChannel = currentChannel,
                         playerState = playerState,
                         onChannelClick = { viewModel.selectChannel(it) },
-                        onSettingsClick = { viewModel.openSettings() }
+                        onSettingsClick = { viewModel.openSettings() },
+                        onPremiumClick = { viewModel.openPremiumAccess() } // Nova ação
                     )
                 }
 
@@ -68,6 +71,7 @@ fun MainScreen(
                     )
                 }
 
+                // Diálogo de configurações
                 if (uiState.showSettings) {
                     SettingsDialog(
                         currentSettings = MainViewModel.PlaylistSettings(
@@ -83,6 +87,13 @@ fun MainScreen(
                             viewModel.updatePlaylist(url, username, password)
                         },
                         onDismiss = { viewModel.closeSettings() }
+                    )
+                }
+
+                // Nova tela de Premium Access
+                if (uiState.showPremiumAccess) {
+                    PremiumAccessScreen(
+                        onClose = { viewModel.closePremiumAccess() }
                     )
                 }
             }
@@ -114,7 +125,8 @@ private fun MainContent(
     currentChannel: Channel?,
     playerState: MainViewModel.PlayerState,
     onChannelClick: (Channel) -> Unit,
-    onSettingsClick: () -> Unit
+    onSettingsClick: () -> Unit,
+    onPremiumClick: () -> Unit // Novo parâmetro para ação premium
 ) {
     Row(modifier = Modifier.fillMaxSize()) {
         ChannelList(
@@ -122,6 +134,7 @@ private fun MainContent(
             currentChannel = currentChannel,
             onChannelClick = onChannelClick,
             onSettingsClick = onSettingsClick,
+            onPremiumClick = onPremiumClick, // Passa a ação premium para a lista
             modifier = Modifier
                 .fillMaxHeight()
                 .weight(1f)
@@ -142,6 +155,7 @@ private fun ChannelList(
     currentChannel: Channel?,
     onChannelClick: (Channel) -> Unit,
     onSettingsClick: () -> Unit,
+    onPremiumClick: () -> Unit, // Novo parâmetro
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier.padding(start = 24.dp, top = 24.dp, bottom = 24.dp)) {
@@ -187,6 +201,15 @@ private fun ChannelList(
             LazyColumn(
                 contentPadding = PaddingValues(top = 8.dp, end = 24.dp)
             ) {
+                // Adicionar botão Premium no topo da lista de canais
+                item("premium_button") {
+                    SimplePremiumButton(
+                        onClick = onPremiumClick,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                }
+
+                // Lista de canais
                 items(channels, key = { it.id }) { channel ->
                     ChannelItem(
                         channel = channel,
