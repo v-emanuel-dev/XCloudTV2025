@@ -1,4 +1,4 @@
-// 📁 Arquivo: Channel.kt
+// 📁 Arquivo: Channel.kt - VERSÃO CORRIGIDA
 // 📍 Localização: app/src/main/java/com/ivip/xcloudtv2025/domain/model/Channel.kt
 
 package com.ivip.xcloudtv2025.domain.model
@@ -55,7 +55,7 @@ data class Channel(
      * Retorna uma versão simplificada do canal para logs
      */
     override fun toString(): String {
-        return "Channel(id=$id, name='$name', category='$category', isLive=$isLive)"
+        return "Channel(id=$id, name='$name', category='$category', isLive=$isLive, sortOrder=$sortOrder)"
     }
 
     // Manual Parcelable implementation
@@ -132,6 +132,7 @@ fun Channel.markAsWatched(): Channel {
 
 /**
  * Lista de canais padrão gratuitos que vem com o app
+ * CORRIGIDO: Definindo sortOrder explicitamente para garantir a ordem
  */
 object DefaultChannels {
     val DEFAULT_FREE_CHANNELS = listOf(
@@ -144,7 +145,8 @@ object DefaultChannels {
             logoUrl = "https://i.imgur.com/BcXewtB.png",
             isLive = true,
             country = "Austria",
-            language = "English"
+            language = "English",
+            sortOrder = 1 // EXPLICITAMENTE DEFININDO A ORDEM
         ),
         Channel(
             id = 2,
@@ -155,7 +157,8 @@ object DefaultChannels {
             logoUrl = "https://i.imgur.com/QX5hWvW.png",
             isLive = true,
             country = "Russia",
-            language = "English"
+            language = "English",
+            sortOrder = 2 // EXPLICITAMENTE DEFININDO A ORDEM
         ),
         Channel(
             id = 3,
@@ -166,7 +169,8 @@ object DefaultChannels {
             logoUrl = "https://i.imgur.com/7V012zQ.png",
             isLive = true,
             country = "Qatar",
-            language = "English"
+            language = "English",
+            sortOrder = 3 // EXPLICITAMENTE DEFININDO A ORDEM
         ),
         Channel(
             id = 4,
@@ -177,7 +181,8 @@ object DefaultChannels {
             logoUrl = "https://i.imgur.com/fYQkS6L.png",
             isLive = true,
             country = "France",
-            language = "English"
+            language = "English",
+            sortOrder = 4 // EXPLICITAMENTE DEFININDO A ORDEM
         ),
         Channel(
             id = 5,
@@ -188,7 +193,8 @@ object DefaultChannels {
             logoUrl = "https://i.imgur.com/OuogLHX.png",
             isLive = true,
             country = "USA",
-            language = "English"
+            language = "English",
+            sortOrder = 5 // EXPLICITAMENTE DEFININDO A ORDEM - SERÁ O ÚLTIMO
         )
     )
 

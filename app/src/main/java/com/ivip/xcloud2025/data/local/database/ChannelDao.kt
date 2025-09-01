@@ -5,26 +5,28 @@ import kotlinx.coroutines.flow.Flow
 
 /**
  * DAO (Data Access Object) para operações com canais no banco de dados
+ * CORRIGIDO: Ordenação por ID quando sort_order for igual
  */
 @Dao
 interface ChannelDao {
 
     /**
-     * Obtém todos os canais ativos ordenados por categoria e nome
+     * Obtém todos os canais ativos ordenados por sort_order, depois por ID
+     * MUDANÇA: Adicionado ID na ordenação para garantir ordem consistente
      */
-    @Query("SELECT * FROM channels WHERE is_active = 1 ORDER BY category ASC, sort_order ASC, name ASC")
+    @Query("SELECT * FROM channels WHERE is_active = 1 ORDER BY sort_order ASC, id ASC")
     fun getAllChannels(): Flow<List<ChannelEntity>>
 
     /**
      * Obtém canais por categoria
      */
-    @Query("SELECT * FROM channels WHERE category = :category AND is_active = 1 ORDER BY sort_order ASC, name ASC")
+    @Query("SELECT * FROM channels WHERE category = :category AND is_active = 1 ORDER BY sort_order ASC, id ASC")
     fun getChannelsByCategory(category: String): Flow<List<ChannelEntity>>
 
     /**
      * Obtém canais favoritos
      */
-    @Query("SELECT * FROM channels WHERE is_favorite = 1 AND is_active = 1 ORDER BY last_watched DESC, name ASC")
+    @Query("SELECT * FROM channels WHERE is_favorite = 1 AND is_active = 1 ORDER BY last_watched DESC, sort_order ASC, id ASC")
     fun getFavoriteChannels(): Flow<List<ChannelEntity>>
 
     /**
@@ -42,7 +44,7 @@ interface ChannelDao {
         AND is_active = 1 
         ORDER BY 
             CASE WHEN name LIKE :query || '%' THEN 1 ELSE 2 END,
-            name ASC
+            sort_order ASC, id ASC
     """)
     fun searchChannels(query: String): Flow<List<ChannelEntity>>
 
@@ -123,4 +125,16 @@ interface ChannelDao {
      */
     @Query("SELECT COUNT(*) FROM channels WHERE url = :url AND is_active = 1")
     suspend fun countChannelsWithUrl(url: String): Int
+
+    /**
+     * NOVA: Atualiza ordem de um canal específico
+     */
+    @Query("UPDATE channels SET sort_order = :sortOrder WHERE id = :id")
+    suspend fun updateChannelSortOrder(id: Long, sortOrder: Int)
+
+    /**
+     * NOVA: Reordena todos os canais por categoria
+     */
+    @Query("SELECT * FROM channels WHERE is_active = 1 ORDER BY category ASC, sort_order ASC, id ASC")
+    suspend fun getAllChannelsForReordering(): List<ChannelEntity>
 }
