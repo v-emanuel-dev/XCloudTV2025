@@ -1,5 +1,6 @@
 package com.ivip.xcloudtv2025.presentation.screens.premium
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -16,10 +17,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ivip.xcloudtv2025.R
 import com.ivip.xcloudtv2025.presentation.theme.XcloudTVTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -132,7 +136,7 @@ fun PremiumAccessScreen(
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.Center,
-                                    modifier = Modifier.padding(bottom = 12.dp)
+                                    modifier = Modifier.padding(bottom = 16.dp)
                                 ) {
                                     Icon(
                                         imageVector = Icons.Default.Chat,
@@ -153,23 +157,16 @@ fun PremiumAccessScreen(
                                     )
                                 }
 
-                                Text(
-                                    text = "(27) 999109882",
-                                    style = MaterialTheme.typography.bodyLarge.copy(
-                                        fontSize = 18.sp,
-                                        fontWeight = FontWeight.Medium
-                                    ),
-                                    color = Color.White,
-                                    modifier = Modifier.padding(bottom = 8.dp)
-                                )
-
-                                Text(
-                                    text = "(27) 988911261",
-                                    style = MaterialTheme.typography.bodyLarge.copy(
-                                        fontSize = 18.sp,
-                                        fontWeight = FontWeight.Medium
-                                    ),
-                                    color = Color.White
+                                // QR Code do WhatsApp
+                                Image(
+                                    painter = painterResource(id = R.drawable.qrcode_whatsapp),
+                                    contentDescription = "QR Code WhatsApp",
+                                    modifier = Modifier
+                                        .size(120.dp)
+                                        .clip(RoundedCornerShape(8.dp))
+                                        .background(Color.White)
+                                        .padding(4.dp),
+                                    contentScale = ContentScale.Fit
                                 )
                             }
 
@@ -177,7 +174,7 @@ fun PremiumAccessScreen(
                             Box(
                                 modifier = Modifier
                                     .width(1.dp)
-                                    .height(120.dp)
+                                    .height(180.dp)
                                     .background(Color.White.copy(alpha = 0.3f))
                             )
 
@@ -189,7 +186,7 @@ fun PremiumAccessScreen(
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.Center,
-                                    modifier = Modifier.padding(bottom = 12.dp)
+                                    modifier = Modifier.padding(bottom = 16.dp)
                                 ) {
                                     Icon(
                                         imageVector = Icons.Default.Send,
@@ -210,13 +207,16 @@ fun PremiumAccessScreen(
                                     )
                                 }
 
-                                Text(
-                                    text = "(27) 995097169",
-                                    style = MaterialTheme.typography.bodyLarge.copy(
-                                        fontSize = 18.sp,
-                                        fontWeight = FontWeight.Medium
-                                    ),
-                                    color = Color.White
+                                // QR Code do Telegram
+                                Image(
+                                    painter = painterResource(id = R.drawable.qrcode_telegram),
+                                    contentDescription = "QR Code Telegram",
+                                    modifier = Modifier
+                                        .size(120.dp)
+                                        .clip(RoundedCornerShape(8.dp))
+                                        .background(Color.White)
+                                        .padding(4.dp),
+                                    contentScale = ContentScale.Fit
                                 )
                             }
                         }
